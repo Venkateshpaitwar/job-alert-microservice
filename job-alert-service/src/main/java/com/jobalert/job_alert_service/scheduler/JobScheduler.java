@@ -18,9 +18,8 @@ public class JobScheduler {
 
     private final JobFetcherService jobFetcherService;
     private final UserService userService;
-    private final AlertService alertService;gi
+    private final AlertService alertService;
 
-    @Scheduled(cron = "0 0 */6 * * *")
     @Scheduled(cron = "0 0 */6 * * *")
     public void fetchJobsForAllUsers() {
         log.info("Scheduler triggered — fetching jobs for all users");
