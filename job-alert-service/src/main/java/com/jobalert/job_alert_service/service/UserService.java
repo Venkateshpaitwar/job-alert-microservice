@@ -14,11 +14,26 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User subscribe(String email, List<String> keywords, String frequency) {
-        User user = new User();
-        user.setEmail(email);
-        user.setKeywords(keywords);
-        user.setFrequency(frequency);
-        return userRepository.save(user);
+        return userRepository.findByEmail(email)
+                .map(existingUser -> {
+                    // add new keywords without duplicates
+                    List<String> updatedKeywords = new java.util.ArrayList<>(existingUser.getKeywords());
+                    for (String keyword : keywords) {
+                        if (!updatedKeywords.contains(keyword)) {
+                            updatedKeywords.add(keyword);
+                        }
+                    }
+                    existingUser.setKeywords(updatedKeywords);
+                    existingUser.setFrequency(frequency);
+                    return userRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setEmail(email);
+                    newUser.setKeywords(keywords);
+                    newUser.setFrequency(frequency);
+                    return userRepository.save(newUser);
+                });
     }
 
     public List<User> getAllUsers() {

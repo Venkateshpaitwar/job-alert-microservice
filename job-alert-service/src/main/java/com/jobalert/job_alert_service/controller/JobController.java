@@ -35,4 +35,14 @@ public class JobController {
         alertService.processAlerts();
         return ResponseEntity.ok("Alerts processed!");
     }
+    @GetMapping("/match-test/{email}")
+    public ResponseEntity<List<JobPosting>> testMatch(@PathVariable String email) {
+        List<JobPosting> allJobs = jobPostingService.getAllJobs();
+
+        return ResponseEntity.ok(
+                allJobs.stream()
+                        .filter(job -> job.getTitle().toLowerCase().contains("java"))
+                        .collect(java.util.stream.Collectors.toList())
+        );
+    }
 }
