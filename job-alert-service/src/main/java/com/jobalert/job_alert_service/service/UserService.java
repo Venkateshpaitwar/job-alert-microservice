@@ -1,7 +1,9 @@
 package com.jobalert.job_alert_service.service;
 
 import com.jobalert.job_alert_service.entity.User;
+import com.jobalert.job_alert_service.exception.ResourceNotFoundException;
 import com.jobalert.job_alert_service.repository.UserRepository;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +43,8 @@ public class UserService {
     }
 
     public void unsubscribe(String email) {
-        userRepository.findByEmail(email)
-                .ifPresent(userRepository::delete);
+        User user = userRepository.findByEmail(email)
+                        .orElseThrow(() ->new ResourceNotFoundException("User not foind with email :" + email));
+        userRepository.delete(user);
     }
 }
