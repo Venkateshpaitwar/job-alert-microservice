@@ -16,11 +16,17 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
     @ElementCollection
     @CollectionTable(name = "user_keywords", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "keyword")
     private List<String> keywords;
 
     @Column(nullable = false)
-    private String frequency; // DAILY, HOURLY
+    private String frequency;   // DAILY, HOURLY
 }
