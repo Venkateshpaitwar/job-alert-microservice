@@ -22,7 +22,7 @@ public class AlertService {
     private final SentAlertRepository sentAlertRepository;
     private final EmailService emailService;
 
-    @Transactional // resolves lazyInitializationException
+    @Transactional // resolved lazyInitializationException
     public void processAlerts() {
         List<User> users = userService.getAllUsers();
         List<JobPosting> allJobs = jobPostingService.getAllJobs();
