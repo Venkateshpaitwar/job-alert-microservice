@@ -1,6 +1,7 @@
 package com.jobalert.job_alert_service.scheduler;
 
 import com.jobalert.job_alert_service.entity.User;
+import com.jobalert.job_alert_service.service.AlertMessageProducer;
 import com.jobalert.job_alert_service.service.AlertService;
 import com.jobalert.job_alert_service.service.JobFetcherService;
 import com.jobalert.job_alert_service.service.UserService;
@@ -18,7 +19,7 @@ public class JobScheduler {
 
     private final JobFetcherService jobFetcherService;
     private final UserService userService;
-    private final AlertService alertService;
+    private final AlertMessageProducer alertMessageProducer;
 
     @Scheduled(cron = "0 0 */6 * * *")
     public void fetchJobsForAllUsers() {
@@ -31,7 +32,7 @@ public class JobScheduler {
             }
         }
 
-        // process and send alerts after fetching
-        alertService.processAlerts();
+        // publish message instead of calling directly
+        alertMessageProducer.publishAlertTrigger("Jobs fetched, process alerts now");
     }
 }

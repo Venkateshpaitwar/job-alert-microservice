@@ -6,6 +6,8 @@ import com.jobalert.job_alert_service.repository.SentAlertRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ public class AlertService {
     private final SentAlertRepository sentAlertRepository;
     private final EmailService emailService;
 
+    @Transactional
     public void processAlerts() {
         List<User> users = userService.getAllUsers();
         List<JobPosting> allJobs = jobPostingService.getAllJobs();
