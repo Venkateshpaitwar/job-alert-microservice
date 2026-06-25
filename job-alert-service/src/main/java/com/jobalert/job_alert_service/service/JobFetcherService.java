@@ -53,6 +53,7 @@ public class JobFetcherService {
                     }
 
                     log.info("Saved jobs for keyword: {}", keyword);
+                    jobPostingService.clearJobsCache();
                 });
     }
 }
