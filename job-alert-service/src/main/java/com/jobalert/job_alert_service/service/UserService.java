@@ -44,7 +44,7 @@ public class UserService {
 
     public void unsubscribe(String email) {
         User user = userRepository.findByEmail(email)
-                        .orElseThrow(() ->new ResourceNotFoundException("User not foind with email :" + email));
+                        .orElseThrow(() ->new ResourceNotFoundException("User not found with email :" + email));
         userRepository.delete(user);
     }
 }
