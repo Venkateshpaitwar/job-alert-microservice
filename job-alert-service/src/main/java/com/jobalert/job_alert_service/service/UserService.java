@@ -16,26 +16,19 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User subscribe(String email, List<String> keywords, String frequency) {
-        return userRepository.findByEmail(email)
-                .map(existingUser -> {
-                    // add new keywords without duplicates
-                    List<String> updatedKeywords = new java.util.ArrayList<>(existingUser.getKeywords());
-                    for (String keyword : keywords) {
-                        if (!updatedKeywords.contains(keyword)) {
-                            updatedKeywords.add(keyword);
-                        }
-                    }
-                    existingUser.setKeywords(updatedKeywords);
-                    existingUser.setFrequency(frequency);
-                    return userRepository.save(existingUser);
-                })
-                .orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setEmail(email);
-                    newUser.setKeywords(keywords);
-                    newUser.setFrequency(frequency);
-                    return userRepository.save(newUser);
-                });
+        User existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No account found for email: " + email + ". Please register first."));
+
+        List<String> updatedKeywords = new java.util.ArrayList<>(existingUser.getKeywords());
+        for (String keyword : keywords) {
+            if (!updatedKeywords.contains(keyword)) {
+                updatedKeywords.add(keyword);
+            }
+        }
+        existingUser.setKeywords(updatedKeywords);
+        existingUser.setFrequency(frequency);
+        return userRepository.save(existingUser);
     }
 
     public List<User> getAllUsers() {
