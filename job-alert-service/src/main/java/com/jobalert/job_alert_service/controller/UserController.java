@@ -1,5 +1,6 @@
 package com.jobalert.job_alert_service.controller;
 
+import com.jobalert.job_alert_service.dto.UserResponse;
 import com.jobalert.job_alert_service.entity.User;
 import com.jobalert.job_alert_service.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,8 +30,12 @@ public class UserController {
 
     @Operation(summary = "Get all subscribers", description = "Returns list of all subscribed users")
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> response = userService.getAllUsers()
+                .stream()
+                .map(UserResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Unsubscribe from alerts", description = "Remove user subscription by email")
