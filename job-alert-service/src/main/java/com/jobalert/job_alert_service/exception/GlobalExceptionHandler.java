@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String,Object>> handleIllegalArguument(IllegalArgumentException ex){
+    public ResponseEntity<Map<String,Object>> handleIllegalArgument(IllegalArgumentException ex){
         Map<String, Object> error = new HashMap<>();
         error.put("timestamp", LocalDateTime.now().toString());
         error.put("status", HttpStatus.BAD_REQUEST.value());

@@ -3,6 +3,7 @@ package com.jobalert.job_alert_service.controller;
 import com.jobalert.job_alert_service.entity.User;
 import com.jobalert.job_alert_service.repository.UserRepository;
 import com.jobalert.job_alert_service.security.JwtUtil;
+import com.jobalert.job_alert_service.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,24 +23,23 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     @Operation(summary = "Register a new user", description = "Create account with username, password, email, keywords")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already taken");
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+        try {
+            userService.register(
+                    request.getUsername(),
+                    request.getPassword(),
+                    request.getEmail(),
+                    request.getKeywords(),
+                    request.getFrequency()
+            );
+            return ResponseEntity.ok("User registered successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
-        user.setKeywords(request.getKeywords());
-        user.setFrequency(request.getFrequency());
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok("User registered successfully");
     }
 
     @Operation(summary = "Login", description = "Authenticate user and return JWT token")
