@@ -30,3 +30,8 @@ application-local.properties
 # IntelliJ IDEA
 .idea/
 *.iml
+
+# Environment variables
+.env
+.env.*
+!.env.example
